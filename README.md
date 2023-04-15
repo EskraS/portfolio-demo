@@ -1,2 +1,2 @@
 # portfolio-demo
-websites that are pending for portfolio 
+The websites that are pending for portfolio. 
