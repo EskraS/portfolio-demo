@@ -1,42 +1,20 @@
-using System.Security.Cryptography.X509Certificates;
+using System;
+using System.Collections.Generic;
 
-public class Item
+public class Employee
 {
-    protected double Price { get; set; }
+    private string _employeeName;
+    public int Salary { get; set; }
 
-    public Item()
-    {
-        Price = 0;
+    public Employee(int salary, string employeeName) {
+        this.Salary = salary;
+        _employeeName = employeeName;
+
     }
-}
 
-public class Fruit : Item
-{
-    private int _weightInKg;
-    private int _priceOfOneKg;
-
-    public double CalculateTotalPrice()
+    public void displayInfo()
     {
-        return Price = _weightInKg * _priceOfOneKg;
-    }
-    public double CalculateTotalPrice(int weightInKg, int priceOfOneKg)
-    {
-        return Price = weightInKg * priceOfOneKg;
-    }
-}
-
-public class Electronics : Item
-{
-    private int _quantity;
-    private double _oneUnitPrice;
-
-    public double CalculateTotalPrice()
-    {
-        return Price = _quantity * _oneUnitPrice;
-    }
-    public double CalculateTotalPrice(int quantity, double oneUnitPrice)
-    {
-        return Price = quantity * oneUnitPrice;
+        Console.WriteLine($"Hi, my name is {_employeeName}, and I earn {Salary} per year");
     }
 }
 
@@ -44,10 +22,7 @@ class program
 {
     static void Main(string[] args)
     {
-        Fruit tomato = new Fruit();
-        Console.WriteLine(tomato.CalculateTotalPrice(4, 3));
-
-        Electronics mobile = new Electronics();
-        Console.WriteLine(mobile.CalculateTotalPrice(6, 2));
+        Employee employee1 = new Employee(5000, "Guja");
+        employee1.displayInfo();
     }
 }
