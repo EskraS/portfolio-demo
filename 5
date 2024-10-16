@@ -1,0 +1,41 @@
+using System.Security.Cryptography.X509Certificates;
+using System;
+using System.Collections.Generic;
+
+public class MyCollection<T>
+{
+    List<T> myList = new List<T>();
+
+    public void addItem(T entries)
+    {
+        myList.Add(entries);
+    }
+
+    public T getItem(int index)
+    {
+        return myList[index];
+
+        if(index < 0 || index >= myList.Count)
+        {
+            throw new IndexOutOfRangeException("Index out of range");
+        } else
+        {
+            return myList[index];
+        }
+    }
+
+}
+
+class program {
+    static void Main(String[] args)
+    {
+      MyCollection<int> intCollection = new MyCollection<int>();
+        intCollection.addItem(0);
+        intCollection.addItem(1);
+        intCollection.addItem(2);
+
+        Console.WriteLine(intCollection.getItem(0));
+        Console.WriteLine(intCollection.getItem(1));
+        Console.WriteLine(intCollection.getItem(2));
+    }
+}
