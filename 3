@@ -1,23 +1,42 @@
 using System.Security.Cryptography.X509Certificates;
-using System;
 
-public abstract class Bird
+public class Item
 {
-    public abstract void MakeSound();
-}
+    protected double Price { get; set; }
 
-public class Sparrow
-{
-    public void MakeSound()
+    public Item()
     {
-        Console.WriteLine("Chirp");
+        Price = 0;
     }
 }
-public class Pigeon
+
+public class Fruit : Item
 {
-    public void MakeSound()
+    private int _weightInKg;
+    private int _priceOfOneKg;
+
+    public double CalculateTotalPrice()
     {
-        Console.WriteLine("Coo");
+        return Price = _weightInKg * _priceOfOneKg;
+    }
+    public double CalculateTotalPrice(int weightInKg, int priceOfOneKg)
+    {
+        return Price = weightInKg * priceOfOneKg;
+    }
+}
+
+public class Electronics : Item
+{
+    private int _quantity;
+    private double _oneUnitPrice;
+
+    public double CalculateTotalPrice()
+    {
+        return Price = _quantity * _oneUnitPrice;
+    }
+    public double CalculateTotalPrice(int quantity, double oneUnitPrice)
+    {
+        return Price = quantity * oneUnitPrice;
     }
 }
 
@@ -25,10 +44,10 @@ class program
 {
     static void Main(string[] args)
     {
-        Sparrow sparrow = new Sparrow();
-        sparrow.MakeSound();
+        Fruit tomato = new Fruit();
+        Console.WriteLine(tomato.CalculateTotalPrice(4, 3));
 
-        Pigeon pigeon = new Pigeon();
-        pigeon.MakeSound();
+        Electronics mobile = new Electronics();
+        Console.WriteLine(mobile.CalculateTotalPrice(6, 2));
     }
 }
