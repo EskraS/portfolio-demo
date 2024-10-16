@@ -1,0 +1,34 @@
+using System.Security.Cryptography.X509Certificates;
+using System;
+
+public abstract class Bird
+{
+    public abstract void MakeSound();
+}
+
+public class Sparrow
+{
+    public void MakeSound()
+    {
+        Console.WriteLine("Chirp");
+    }
+}
+public class Pigeon
+{
+    public void MakeSound()
+    {
+        Console.WriteLine("Coo");
+    }
+}
+
+class program
+{
+    static void Main(string[] args)
+    {
+        Sparrow sparrow = new Sparrow();
+        sparrow.MakeSound();
+
+        Pigeon pigeon = new Pigeon();
+        pigeon.MakeSound();
+    }
+}
