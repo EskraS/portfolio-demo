@@ -1,0 +1,74 @@
+using System;
+using System.Runtime.InteropServices;
+
+public class Lecturer
+{
+    public string Name { get; set; }
+    public string Surname { get; set; }
+    public DateTime Date { get; set; }
+    public string School { get; set; }
+    public string Faculty { get; set; }
+
+    public Lecturer(string name, string surname, DateTime date, string school, string faculty) {
+        Name = name;
+        Surname = surname;
+        Date = date;
+        School = school;
+        Faculty = faculty;
+    }
+
+    public void Display()
+    {
+        Console.WriteLine($"Name: {Name}\nSurname: {Surname}\nDate: {Date}\nSchool: {School}\nFaculty{Faculty}");
+    }
+
+    public bool IsRetirementAge()
+    {
+        int age = DateTime.Now.Year - Date.Year;
+        if (age >= 65)
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
+    }
+}
+
+class program
+{
+    public static void Main(string[] args)
+    {
+        Lecturer[] lecturers = new Lecturer[3];
+
+        for(int i = 0; i < 3; i++)
+        {
+            Console.WriteLine($"Enter details for Lecturer {i + 1}:");
+
+            Console.WriteLine($"Enter Name");
+            string name = Console.ReadLine();
+            Console.WriteLine($"Enter Surname");
+            string surname = Console.ReadLine();
+            Console.WriteLine($"Enter Birthdate");
+            DateTime date = DateTime.Parse(Console.ReadLine());
+            Console.WriteLine($"Enter School");
+            string school = Console.ReadLine();
+            Console.WriteLine($"Enter Faculty");
+            string faculty = Console.ReadLine();
+
+            lecturers[i] = new Lecturer(name, surname, date, school, faculty);
+        }
+
+        for(int i = 0; i < 3; i++)
+        {
+            lecturers[i].Display();
+        }
+
+        foreach(var lecturer in lecturers) {
+            if (lecturer.IsRetirementAge())
+            {
+                Console.WriteLine($"{lecturer.Name}, {lecturer.Surname}");
+            }
+        }
+    }
+}
