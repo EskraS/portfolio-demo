@@ -1,0 +1,124 @@
+using System;
+using System.Xml.Linq;
+
+public abstract class Software
+{
+    public string Name { get; set; }
+    public string CompanyName { get; set; }
+    public DateTime ReleaseDate {  get; set; }
+
+    public abstract void DisplayInfo();
+
+    public abstract bool IsUpToDate(DateTime CurrentDate);
+}
+
+public class FreeSoftware : Software
+{
+    public FreeSoftware(string name, string companyName, DateTime releaseDate)
+    {
+        Name = name;
+        CompanyName = companyName;
+        ReleaseDate = releaseDate;
+    }
+
+    public override void DisplayInfo()
+    {
+        Console.WriteLine($"Software: {Name}\nCompany: {CompanyName}\nRelease Date: {ReleaseDate}");
+    }
+
+    public override bool IsUpToDate(DateTime CurrentDate)
+    {
+        return ReleaseDate <= CurrentDate;
+    }
+}
+
+public class TrialSoftware : Software
+{
+    public DateTime InstallationDate { get; set; }
+    public int ExpiryMonths { get; set; }
+
+    public TrialSoftware(string name, string companyName, DateTime releaseDate, DateTime installationDate, int expiryMonths)
+    {
+        Name = name;
+        CompanyName = companyName;
+        ReleaseDate = releaseDate;
+        InstallationDate = installationDate;
+        ExpiryMonths = expiryMonths;
+    }
+    public override void DisplayInfo()
+    {
+        Console.WriteLine($"Software: {Name}\nCompany: {CompanyName}\nRelease Date: {ReleaseDate.ToShortDateString()}\nInstallation Date: {InstallationDate.ToShortDateString()}\nExpires in {ExpiryMonths} months");
+    }
+    public override bool IsUpToDate(DateTime currentDate)
+    {
+        DateTime expiryDate = InstallationDate.AddMonths(ExpiryMonths);
+        return currentDate <= expiryDate;
+    }
+}
+
+public class CommercialSoftware : Software
+{
+
+    public DateTime InstallationDate { get; set; }
+    public int ExpiryMonths { get; set; }
+    public double Price { get; set; }
+
+    public CommercialSoftware(string name, string companyName, DateTime releaseDate, double price, DateTime installationDate, int expiryMonths)
+    {
+        Name = name;
+        CompanyName = companyName;
+        Price = price;
+        ReleaseDate = releaseDate;
+        InstallationDate = installationDate;
+        ExpiryMonths = expiryMonths;
+    }
+    public override void DisplayInfo()
+    {
+        Console.WriteLine($"Software: {Name}\nCompany: {CompanyName}\n Release Date: {ReleaseDate.ToShortDateString()}\n Installation Date: " +
+            $"{InstallationDate.ToShortDateString()}\n Expires in {ExpiryMonths} Months\n Price: {Price}");
+    }
+
+    public override bool IsUpToDate(DateTime CurrentDate)
+    {
+        DateTime expiryDate = InstallationDate.AddMonths(ExpiryMonths);
+        return CurrentDate <= expiryDate;
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        int n = 3;
+        Software[] softwareArray = new Software[n];
+
+        softwareArray[0] = new FreeSoftware("Quiz2.Exe-Free", "Aleksandre Inc", new DateTime(2004, 8, 19));
+        softwareArray[1] = new TrialSoftware("Quiz2.Exe-Trial", "Aleksandre Inc", new DateTime(2004, 8, 19), new DateTime(2024, 10, 13), 3);
+        softwareArray[2] = new CommercialSoftware("Quiz2.Exe-Commercial", "Aleksandre Inc", new DateTime(2004, 8, 19), 86.99, new DateTime(2024, 10, 13), 3);
+
+        foreach(var software in softwareArray)
+        {
+            software.DisplayInfo();
+            Console.WriteLine($"Is the program up to date?: {software.IsUpToDate(DateTime.Now)}");
+            Console.WriteLine();
+        }
+        Console.WriteLine("Enter a date (year, month, date) to check for non-expired software:");
+
+        if (DateTime.TryParse(Console.ReadLine(), out DateTime searchDate))
+        {
+            Console.WriteLine($"\nSoftware not expired as of {searchDate.ToShortDateString()}:\n");
+            foreach (var software in softwareArray)
+            {
+                if (software.IsUpToDate(searchDate))
+                {
+                    software.DisplayInfo();
+                    Console.WriteLine();
+                }
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid date format. Please enter the date in yyyy-mm-dd format.");
+        }
+    }
+}
