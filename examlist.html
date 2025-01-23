@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do List</title>
+</head>
+
+<body>
+  <div id="todoListContainer"></div>
+
+  <script>
+    const todoListContainer = document.getElementById("todoListContainer")
+    function addTodoItem(text) {
+      let ul = todoListContainer.querySelector("ul")
+      if (!ul) {
+        ul = document.createElement("ul")
+        todoListContainer.appendChild(ul)
+      }
+      const li = document.createElement("li")
+      li.textContent = text
+      ul.appendChild(li)
+    }
+    addTodoItem("Start Midterm Exam");
+    addTodoItem("Finish Midterm Exam");
+    addTodoItem("Submit Midterm Exam");
+    addTodoItem("Relax");
+
+  </script>
+</body>
+
+</html>

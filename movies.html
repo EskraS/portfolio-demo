@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        const oscarWinners = {
+            "1997": { title: "Titanic", director: "James Cameron", oscarsWon: 11 },
+            "2008": { title: "Slumdog Millionaire", director: "Danny Boyle", oscarsWon: 8 },
+            "1994": { title: "Forrest Gump", director: "Robert Zemeckis", oscarsWon: 6 },
+            "2010": { title: "The King's Speech", director: "Tom Hooper", oscarsWon: 4 },
+            "2003": { title: "The Lord of the Rings: The Return of the King", director: "Peter Jackson", oscarsWon: 11 },
+            "2019": { title: "Parasite", director: "Bong Joon-ho", oscarsWon: 4 }
+        };
+
+        for (const year in oscarWinners) {
+            if (parseInt(year) >= 2000) {
+                const film = oscarWinners[year]
+                console.log(`Year: ${year}, Title: ${film.director}, Awards: ${film.oscarsWon}`)
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <p>This is an original paragraph.</p>
+    <p>Another original paragraph.</p>
+    <script>
+        function styleAndExtendItems(newSpanItems) {
+            var paragraph = document.querySelectorAll("p")
+            for(i = 0; i < paragraph.length; i++){
+                paragraph[i].style.color = "blue"
+                paragraph[i].textContent = `${i+1}. ${paragraph[i].textContent}`
+            }
+
+            var container = document.createElement("div")
+            container.className = "new-items-container"
+            document.body.appendChild(container)
+
+            for(x = 0; x < newSpanItems.length; x++){
+                var span = document.createElement("span")
+                span.textContent = newSpanItems[x]
+                span.style.color = "green"
+                container.appendChild(span)
+            }
+        }
+        
+
+        const newSpanItems = [
+            "this is a new span item",
+            "another new span item",
+            "yet another new span item"
+        ]
+        styleAndExtendItems(newSpanItems)
+    </script>
+</body>
+
+</html>
