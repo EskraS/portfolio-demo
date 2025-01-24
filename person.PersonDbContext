@@ -1,0 +1,14 @@
+using Microsoft.EntityFrameworkCore;
+
+namespace Lecture_10_Gr2
+{
+    public class PersonDbContext : DbContext
+    {
+        public DbSet<Person> Persons { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseInMemoryDatabase("PersonsDb");
+        }
+    }
+}
