@@ -1,0 +1,10 @@
+namespace Lecture_10_Gr2
+{
+    public interface IPersonService
+    {
+        public List<Person> PrintAllPersons();
+        public void AddPerson(Person person);
+        public void UpdatePersonName(Guid id, Person person);
+        public void DeletePerson(Guid id);
+    }
+}
