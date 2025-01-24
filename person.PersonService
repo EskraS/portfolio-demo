@@ -1,0 +1,49 @@
+namespace Lecture_10_Gr2
+{
+    public class PersonService : IPersonService
+    {
+        public PersonDbContext _dbContext;
+           
+        public PersonService(PersonDbContext personDbContext)
+        {
+            _dbContext = personDbContext;
+        }
+
+        public List<Person> PrintAllPersons()
+        {
+            var persons = _dbContext.Persons.ToList();
+
+            return persons;
+        }
+
+        public void AddPerson(Person person)
+        {
+            _dbContext.Persons.Add(person);
+            _dbContext.SaveChanges();
+        }
+
+        public void UpdatePersonName(Guid id, Person person)
+        {
+            var personInDb = _dbContext.Persons.FirstOrDefault(x => x.Id == id);
+
+            if (personInDb != null)
+            {
+                personInDb.Name = person.Name;
+            }
+
+            _dbContext.SaveChanges();
+        }
+
+        public void DeletePerson(Guid id)
+        {
+            var personInDb = _dbContext.Persons.FirstOrDefault(x => x.Id == id);
+
+            if (personInDb != null)
+            {
+                _dbContext.Persons.Remove(personInDb);
+            }
+
+            _dbContext.SaveChanges();
+        }
+    }
+}
