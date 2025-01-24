@@ -1,0 +1,77 @@
+using Microsoft.AspNetCore.Mvc;
+using Services;
+using Domain;
+
+namespace WebApiApp.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class OrdersController : ControllerBase
+    {
+        private readonly OrderService _orderService;
+
+        public OrdersController(OrderService orderService)
+        {
+            _orderService = orderService;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<Order>>> GetOrders()
+        {
+            var orders = await _orderService.GetAllOrdersAsync();
+            return Ok(orders);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Order>> GetOrder(int id)
+        {
+            var order = await _orderService.GetOrderByIdAsync(id);
+            if (order == null) return NotFound();
+            return Ok(order);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddOrder(Order order)
+        {
+            await _orderService.AddOrderAsync(order);
+            return CreatedAtAction(nameof(GetOrder), new { id = order.Id }, order);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateOrder(int id, Order order)
+        {
+            if (id != order.Id) return BadRequest();
+
+            await _orderService.UpdateOrderAsync(order);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteOrder(int id)
+        {
+            await _orderService.DeleteOrderAsync(id);
+            return NoContent();
+        }
+
+        [HttpGet("customer/{customerId}")]
+        public async Task<ActionResult<List<Order>>> GetOrdersByCustomer(int customerId)
+        {
+            var orders = await _orderService.GetOrdersByCustomerAsync(customerId);
+            return Ok(orders);
+        }
+
+        [HttpGet("customer/{customerId}/total-price")]
+        public async Task<ActionResult<decimal>> GetTotalPriceByCustomer(int customerId)
+        {
+            var totalPrice = await _orderService.GetTotalPriceByCustomerAsync(customerId);
+            return Ok(totalPrice);
+        }
+
+        [HttpGet("total-price-per-customer")]
+        public async Task<ActionResult<Dictionary<int, decimal>>> GetTotalPricePerCustomer()
+        {
+            var totalPrices = await _orderService.GetTotalPricePerCustomerAsync();
+            return Ok(totalPrices);
+        }
+    }
+}
