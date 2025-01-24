@@ -1,0 +1,40 @@
+using Microsoft.AspNetCore.Mvc;
+
+namespace Lecture_10_Gr2.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PersonsController : ControllerBase
+    {
+        public IPersonService _personService;
+
+        public PersonsController(IPersonService personService)
+        {
+            _personService = personService;
+        }
+
+        [HttpGet]
+        public List<Person> PrintAllPersons()
+        {
+            return _personService.PrintAllPersons();
+        }
+
+        [HttpPost]
+        public void AddPerson(Person person)
+        {
+            _personService.AddPerson(person);
+        }
+
+        [HttpPut]
+        public void UpdatePerson(Guid id, Person person) 
+        {
+            _personService.UpdatePersonName(id, person);
+        }
+
+        [HttpDelete]
+        public void DeletePerson(Guid id) 
+        {
+            _personService.DeletePerson(id);
+        }
+    }
+}
