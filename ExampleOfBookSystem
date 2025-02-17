@@ -1,0 +1,221 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+
+public enum Country
+{
+    USA, UK, Germany, Austria, Georgia
+}
+
+public enum ProductType
+{
+    Book, Article, Blog
+}
+
+public enum City
+{ Washington, London, Berlin, Vienna, Tbilisi }
+
+public enum Sex { Male, Female }
+
+public enum Publishing { Penguin, HarperCollins, RandomHouse, OxfordPress }
+
+public interface IAuthor
+{
+    void AddProduct(Product product);
+    void GetAuthorInfo();
+}
+
+public class Author : IAuthor, IComparable<Author>
+{
+    public Guid Id { get; private set; } = Guid.NewGuid();
+
+    private string name;
+    public string Name
+    {
+        get { return name; }
+        set
+        {
+            if (value.Length < 2 || value.Length > 50)
+            {
+                throw new ArgumentException("Name length must be between 2 and 50 characters");
+            }
+            name = value;
+        }
+    }
+
+    private string surname;
+    public string Surname
+    {
+        get { return surname; }
+        set
+        {
+            if (value.Length < 2 || value.Length > 50)
+            {
+                throw new ArgumentException("Surname length must be between 2 and 50 characters");
+            }
+            surname = value;
+        }
+    }
+    public Sex Gender { get; set; }
+    public DateTime Birthdate { get; set; }
+    public List<Product> Products { get; set; } = new List<Product>();
+
+    public void AddProduct(Product product)
+    {
+        if (product != null && !Products.Contains(product))
+        {
+            Products.Add(product);
+        }
+    }
+
+    public void GetAuthorInfo()
+    {
+        Console.WriteLine($"{Name} {Surname} - Born on {Birthdate.ToShortDateString()}");
+    }
+
+    public int CompareTo(Author other)
+    {
+        if (other == null) return 1;
+        return other.Birthdate.CompareTo(this.Birthdate); // Descending order (older authors first)
+    }
+}
+
+public class Product : IComparer<Product>
+{
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public string Title { get; set; }
+    public string Anotation { get; set; }
+    public ProductType Type { get; set; }
+    public string ISBN { get; set; }
+    public DateTime ReleaseDate { get; set; }
+    public Publishing Publishing { get; set; }
+    public int PageAmount { get; set; }
+    public string Address { get; set; }
+    public List<Author> Authors { get; set; } = new List<Author>();
+
+    public void AddAuthor(Author author)
+    {
+        if (author != null && !Authors.Contains(author))
+        {
+            Authors.Add(author);
+        }
+    }
+
+    public int Compare(Product x, Product y)
+    {
+        if (x == null || y == null) return 0;
+        return x.PageAmount.CompareTo(y.PageAmount); // Ascending order by page amount
+    }
+}
+
+public static class AuthorRecord
+{
+    public static List<Author> AuthorsList = new List<Author>();
+
+    // Add an Author
+    public static void AddAuthor(Author author)
+    {
+        if (author != null && !AuthorsList.Contains(author))
+        {
+            AuthorsList.Add(author);
+        }
+    }
+
+    // Get all Authors
+    public static List<Author> GetAllAuthors()
+    {
+        return AuthorsList;
+    }
+
+    // Product Search by Date Range
+    public static List<Product> SearchProductsByDateRange(DateTime startDate, DateTime endDate)
+    {
+        return AuthorsList.SelectMany(a => a.Products)
+                          .Where(p => p.ReleaseDate >= startDate && p.ReleaseDate <= endDate)
+                          .ToList();
+    }
+
+    // Get Top M Products
+    public static List<Product> GetTopMProducts(int m)
+    {
+        return AuthorsList.SelectMany(a => a.Products)
+                          .OrderByDescending(p => p.PageAmount)
+                          .Take(m)
+                          .ToList();
+    }
+
+    // Yearly Report for Product's Total Amount
+    public static void GetYearlyReport(int year)
+    {
+        var books = AuthorsList.SelectMany(a => a.Products)
+                               .Where(p => p.ReleaseDate.Year == year && p.Type == ProductType.Book)
+                               .Count();
+
+        var articles = AuthorsList.SelectMany(a => a.Products)
+                                  .Where(p => p.ReleaseDate.Year == year && p.Type == ProductType.Article)
+                                  .Count();
+
+        var blogs = AuthorsList.SelectMany(a => a.Products)
+                               .Where(p => p.ReleaseDate.Year == year && p.Type == ProductType.Blog)
+                               .Count();
+
+        Console.WriteLine($"Yearly Report for {year}:");
+        Console.WriteLine($"Books: {books}, Articles: {articles}, Blogs: {blogs}");
+    }
+}
+
+public class Program
+{
+    public static void Main()
+    {
+        // Creating Authors
+        var author1 = new Author { Name = "John", Surname = "Doe", Birthdate = new DateTime(1985, 6, 15) };
+        var author2 = new Author { Name = "Jane", Surname = "Smith", Birthdate = new DateTime(1990, 1, 10) };
+
+        AuthorRecord.AddAuthor(author1);
+        AuthorRecord.AddAuthor(author2);
+
+        // Creating Products
+        var product1 = new Product { Title = "Book Title", Anotation = "Description", Type = ProductType.Book, ISBN = "1234567890123", ReleaseDate = new DateTime(2020, 5, 1), Publishing = Publishing.Penguin, PageAmount = 300, Address = "Library Address" };
+        var product2 = new Product { Title = "Blog Title", Anotation = "Description", Type = ProductType.Blog, ISBN = "1234567890124", ReleaseDate = new DateTime(2021, 3, 15), Publishing = Publishing.HarperCollins, PageAmount = 50, Address = "http://example.com" };
+
+        author1.AddProduct(product1);
+        author2.AddProduct(product2);
+
+        // Sorting Authors by Age (Descending)
+        var sortedAuthors = AuthorRecord.AuthorsList.OrderByDescending(a => a.Birthdate).ToList();
+        Console.WriteLine("Sorted Authors by Age:");
+        foreach (var author in sortedAuthors)
+        {
+            Console.WriteLine($"{author.Name} {author.Surname}, Born on {author.Birthdate.ToShortDateString()}");
+        }
+
+        // Sorting Products by Page Amount (Ascending)
+        var sortedProducts = author1.Products.OrderBy(p => p.PageAmount).ToList();
+        Console.WriteLine("\nSorted Products by Page Amount:");
+        foreach (var product in sortedProducts)
+        {
+            Console.WriteLine($"{product.Title}, Pages: {product.PageAmount}");
+        }
+
+        // Search for Products in Date Range
+        var searchResults = AuthorRecord.SearchProductsByDateRange(new DateTime(2020, 1, 1), new DateTime(2021, 12, 31));
+        Console.WriteLine("\nSearch Results (Date Range):");
+        foreach (var product in searchResults)
+        {
+            Console.WriteLine($"{product.Title}, Released on {product.ReleaseDate.ToShortDateString()}");
+        }
+
+        // Get Top 1 Product by Circulation
+        var topMProducts = AuthorRecord.GetTopMProducts(1);
+        Console.WriteLine("\nTop M Products (Highest Circulation):");
+        foreach (var product in topMProducts)
+        {
+            Console.WriteLine($"{product.Title}, Pages: {product.PageAmount}");
+        }
+
+        // Yearly Report (e.g., for 2020)
+        AuthorRecord.GetYearlyReport(2020);
+    }
+}
