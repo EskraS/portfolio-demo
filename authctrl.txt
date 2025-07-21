@@ -1,0 +1,107 @@
+const bcrypt = require('bcryptjs');
+
+const db = require('../config/database');
+const { generateToken } = require('../middleware/auth');
+
+// Register new user
+
+const register = async (req, res) => {
+
+    try {
+        const { username, email, password } = req.body;
+
+        const users = db.getUsers();
+        const currentUser = users.find(user => user.username === username || user.email === email)
+
+        if (currentUser) {
+            return res.status(400).json({error: 'This user already exists'});
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newUser = {
+            id: Date.now().toString(),
+            username,
+            email,
+            password: hashedPassword,
+            createdAt: new Date().toISOString()
+        }
+
+        users.push(newUser);
+        db.saveUsers(users)
+
+        const token = generateToken(newUser)
+
+        res.status(200).json({
+            message: 'Registration Successful',
+            token,
+            user: {
+                id: newUser.id,
+                username: newUser.username,
+                email: newUser.email,
+            }
+        });
+
+    } catch (error) {
+        console.log('Registration Failed:', error);
+        return res.status(500).json({ error: 'Server Error' })
+    }
+
+}
+
+
+
+// Login user
+const login = async (req, res) => {
+    const { email, password } = req.body;
+    const users = db.getUsers();
+    const currentUser = users.find(user => user.email === email)
+    if (!currentUser) {
+        return res.status(400).json({ error: 'This user does not exist' })
+    }
+
+    const passwordCorrect = await bcrypt.compare(password, currentUser.password);
+    if (!passwordCorrect) {
+        return res.status(401).json({ error: 'The password is incorrect' })
+    }
+
+    const token = generateToken(currentUser)
+
+    res.status(200).json({
+        message: 'Login Successful',
+        token,
+        user: {
+            id: currentUser.id,
+            username: currentUser.username,
+            email: currentUser.email
+        }
+    });
+};
+
+// Get user profile
+const getProfile = (req, res) => {
+    try {
+        const users = db.getUsers();
+        const user = users.find(u => u.id === req.user.userId);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.json({
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            createdAt: user.createdAt
+        });
+    } catch (error) {
+        console.error('Profile error:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+module.exports = {
+    register,
+    login,
+    getProfile
+}; 
