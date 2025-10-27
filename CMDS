@@ -9,6 +9,7 @@ Python-based application using SQLAlchemy ORM
 Critical information obtained:
 Backend: PostgreSQL database
 Technology: Python with SQLAlchemy ORM
+sqlmap -u 'http://34.185.184.46:30787/user?id=1' --dbs
 Vulnerability: User input inserted directly into SQL query without validation
 Database schema: Table named 'guests' exists
 SQLMap confirmed SQL injection vulnerability and identified PostgreSQL backend
